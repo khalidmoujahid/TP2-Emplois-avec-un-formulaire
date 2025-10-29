@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emploi du temps CIS - S3</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Style pour le logo */
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #2c3e50;
+        }
+        
+        .logo {
+            max-width: 200px;
+            height: auto;
+            display: inline-block;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header h2 {
+            color: #111912;
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+        
+        .header h3 {
+            color: #0e0d0d;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        
+        .schedule-table th, .schedule-table td {
+            border: 1px solid black;
+            padding: 12px;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .schedule-table th {
+            background-color: #6f99cf;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .schedule-table td {
+            background-color: #f9f9f9;
+            height: 80px;
+            vertical-align: top;
+        }
+        
+        .time-header {
+            background-color: #131304 !important;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .day-header {
+            background-color: #c2dff9 !important;
+            color: white;
+            font-weight: bold;
+            width: 10%;
+        }
+        
+        .course {
+            margin-bottom: 8px;
+            padding: 5px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        
+        .course-name {
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+        
+        .course-details {
+            font-size: 12px;
+            color: #555;
+        }
+        
+        /* Couleurs pour les différentes matières */
+        .course-1 {
+            background-color: white;
+            color: black;
+        }
+        
+        .course-2 {
+            background-color: white;
+            color: black;
+        }
+        
+        .course-3 {
+            background-color: white;
+            color: black;
+        }
+        
+        .course-4 {
+            background-color: white;
+            color: black;
+        }
+        
+        .course-5 {
+            background-color: white;
+            color: black;
+        }
+        
+        .course-6 {
+            background-color: white;
+            color: black;
+        }
+        
+        .rocaire-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            border-left: 5px solid black;
+        }
+        
+        .rocaire-section h4 {
+            color: #c4ddf5;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .rocaire-times {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .time-slot {
+            background-color: #68a4df;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            text-align: center;
+            flex: 1;
+            margin-right: 10px;
+            min-width: 120px;
+        }
+        
+        .time-slot:last-child {
+            margin-right: 0;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #7f8c8d;
+            font-size: 14px;
+            border-top: 1px solid #ecf0f1;
+            padding-top: 20px;
+        }
+        
+        /* Nouvelle section pour les couleurs */
+        .color-legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+        
+        .legend-text {
+            font-size: 0.9rem;
+            color: #555;
+        }
+        
+        /* Section planning coloré */
+        .color-planning {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .color-planning h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .planning-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .planning-slot {
+            border-radius: 8px;
+            padding: 15px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .planning-time {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        
+        .planning-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        .slot-1 {
+            background: linear-gradient(135deg, #e32305, #e32305);
+        }
+        
+        .slot-2 {
+            background: linear-gradient(135deg, #e9a0b9, #e9a0b9);
+        }
+        
+        .slot-3 {
+            background: linear-gradient(135deg, #e9a0b9, #e9a0b9);
+        }
+        
+        .slot-4 {
+            background: linear-gradient(135deg, #27ae60, #27ae60);
+        }
+        
+        .slot-5 {
+            background: linear-gradient(135deg, #cbf7d2, #cbf7d2);
+        }
+        
+        .slot-6 {
+            background: linear-gradient(135deg, #cbf7d2, #cbf7d2);
+        }
+        
+        .professor-link {
+            display: inline-block;
+            margin-top: 5px;
+            color: #6a11cb;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .professor-link:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .schedule-table {
+                font-size: 12px;
+            }
+            
+            .schedule-table th, .schedule-table td {
+                padding: 8px 4px;
+            }
+            
+            .course {
+                font-size: 11px;
+            }
+            
+            .rocaire-times {
+                flex-direction: column;
+            }
+            
+            .time-slot {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+            
+            .planning-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .logo {
+                max-width: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+     <div class="logo-container" style="text-align: right;">
+    <img src="C:\Users\PC\Desktop\acs\fpo.jpg" alt="Logo FPO" class="logo" style="width: 800px; height: auto;">
+</div>
+
+  
+        <div class="schedule-info">
+            <div style="text-align: right;">AU : 2025-2026</div>
+            <div style="text-align: center;"><strong>CS_S3</strong></div>
+        </div>
+        
+        <table class="schedule-table">
+            <tr class="time-header">
+                <th></th>
+                <th>9h00-10h30</th>
+                <th>10h35-12h05</th>
+                <th>12h15-13h45</th>
+                <th>13h50-15h20</th>
+                <th>15h30-17h00</th>
+                <th>17h05-18h35</th>
+            </tr>
+            
+            <tr>
+                <th>Lundi</th>
+                <td>
+                    <div class="course">
+                        <div class="course-title">Sécurité Système</div>
+                        <div class="course-details">Salle 1 </div>
+                        <div class="course-details"> 
+                        <a href="javascript:void(0)" class="professor-link" onclick="redirectToProfessorForm('R. Dakir')">Pr. R. Dakir</a>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="course">
+                        <div class="course-title">Sécurité Système</div>
+                        <div class="course-details">Salle 1 </div>
+                        <div class="course-details">
+                        <a href="javascript:void(0)" class="professor-link" onclick="redirectToProfessorForm('R. Dakir')">Pr. R. Dakir</a>
+                        </div>
+                    </div>
+                </td>
+                <td class="empty-slot"></td>
+                <td>
+                    <div class="course">
+                        <div class="course-title">Systèmes et Réseaux III</div>
+                        <div class="course-details">Salle 1 </div>
+                        <div class="course-details">
+                        <a href="javascript:void(0)" class="professor-link" onclick="redirectToProfessorForm('R. Dakir')">Pr. R. Dakir</a>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="course">
+                        <div class="course-title">Systèmes et Réseaux III</div>
+                        <div class="course-details">Salle 1 </div>
+                        <div class="course-details"> 
+                        <a href="javascript:void(0)" class="professor-link" onclick="redirectToProfessorForm('R. Dakir')">Pr. R. Dakir</a>
+                        </div>
+                    </div>
+                </td>
+                <td class="empty-slot"></td>
+            </tr>
+            
+            <tr>
+                <th>Mardi</th>
+                <td>
+                    <div class="course">
+                        <div class="course-title">LE – Français</div>
+                        <div class="course-details">Salle 1 </div>
+                        <div class="course-details">
+                        <a href="javascript:void(0)" class="professor-link" onclick="redirectToProfessorForm('D. Ahajji')">Pr. D. Ahajji</a>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="course">
+                        <div class="course-title">Développement logiciel</div>
+                        <div class="course-details">Salle 1 </div>
+                        <div class="course-details">
+                        <a href="javascript:void(0)" class="professor-link" onclick="redirectToProfessorForm('Y. Chawki')">Pr. Y. Chawki</a>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="course">
+                        <div class="course-title">Développement logiciel</div>
+                        <div class="course-details">Salle 1 </div>
+                        <div class="course-details">
+                        <a href="javascript:void(0)" class="professor-link" onclick="redirectToProfessorForm('Y. Chawki')">Pr. Y. Chawki</a>
+                        </div>
+                    </div>
+                </td>
+                <td class="empty-slot"></td>
+                <td class="empty-slot"></td>
+                <td class="empty-slot"></td>
+            </tr>
+            
+            <tr>
+                <th>Mercredi</th>
+                <td class="empty-slot"></td>
+                <td class="empty-slot"></td>
+                <td class="empty-slot"></td>
+                <td class="empty-slot"></td>
+                <td class="empty-slot"></td>
+                <td class="empty-slot"></td>
+            </tr>
+            
+            <tr>
+                <th>Jeudi</th>
+                <td class="empty-slot"></td>
+                <td class="empty-slot"></td>
+                <td>
+                    <div class="course">
+                        <div class="course-title">POO</div>
+                        <div class="course-details">Salle 1 </div>
+                        <div class="course-details"> 
+                        <a href="javascript:void(0)" class="professor-link" onclick="redirectToProfessorForm('El Ouahhabi')">Pr. El Ouahhabi</a>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="course">
+                        <div class="course-title">POO</div>
+                        <div class="course-details">Salle 1 </div>
+                        <div class="course-details"> 
+                        <a href="javascript:void(0)" class="professor-link" onclick="redirectToProfessorForm('El Ouahhabi')">Pr. El Ouahhabi</a>
+                        </div>
+                    </div>
+                </td>
+                <td class="empty-slot"></td>
+                <td class="empty-slot"></td>
+            </tr>
+            
+            <tr>
+                <th>Vendredi</th>
+                <td class="empty-slot"></td>
+                <td class="empty-slot"></td>
+                <td class="empty-slot"></td>
+                <td>
+                    <div class="course">
+                        <div class="course-title">Management 3</div>
+                        <div class="course-details">Salle 1 </div>
+                        <div class="course-details">
+                        <a href="javascript:void(0)" class="professor-link" onclick="redirectToProfessorForm('Hangour')">Pr. Hangour</a>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="course">
+                        <div class="course-title">Management 3</div>
+                        <div class="course-details">Salle 1 </div>
+                        <div class="course-details">
+                        <a href="javascript:void(0)" class="professor-link" onclick="redirectToProfessorForm('Hangour')">Pr. Hangour</a>
+                        </div>
+                    </div>
+                </td>
+                <td class="empty-slot"></td>
+            </tr>
+            
+            <tr>
+                <th>Samedi</th>
+                <td>
+                    <div class="course">
+                        <div class="course-title">Technologie web</div>
+                        <div class="course-details">Salle 1 </div>
+                        <div class="course-details">
+                        <a href="javascript:void(0)" class="professor-link" onclick="redirectToProfessorForm('O. Kamal')">Pr. O. Kamal</a>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="course">
+                        <div class="course-title">Technologie web</div>
+                        <div class="course-details">Salle 1 </div>
+                        <div class="course-details">
+                        <a href="javascript:void(0)" class="professor-link" onclick="redirectToProfessorForm('O. Kamal')">Pr. O. Kamal</a>
+                        </div>
+                    </div>
+                    
+                </td>
+                <td class="empty-slot"></td>
+                <td class="empty-slot"></td>
+                <td class="empty-slot"></td>
+                <td class="empty-slot"></td>
+            </tr>
+        </table> 
+        
+        <div class="color-planning">
+            <div class="planning-grid">
+                <div class="planning-slot slot-1">
+                    <div class="planning-time">Horaire de vendredi</div>
+                </div>
+                <div class="planning-slot slot-2">
+                    <div class="planning-time">8h30 - 10h00</div>
+                </div>
+                <div class="planning-slot slot-3">
+                    <div class="planning-time">10h00 - 11h30</div>
+                </div>
+                <div class="planning-slot slot-4">
+                    <div class="planning-time">11h30 - 13h00</div>
+                </div>
+                <div class="planning-slot slot-5">
+                    <div class="planning-time">15h15 - 16h45</div>
+                </div>
+                <div class="planning-slot slot-6">
+                    <div class="planning-time">16h50 - 18h20</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function redirectToProfessorForm(professorName) {
+            // Stocker le nom du professeur dans le localStorage
+            localStorage.setItem('selectedProfessor', professorName);
+            // Rediriger vers la page du formulaire
+            window.location.href = 'professor-form.html';
+        }
+    </script>
+</body>
+</html>
